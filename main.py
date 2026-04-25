@@ -18,6 +18,14 @@ USER_DATA = {
     "github": "https://github.com/dpk45deepak",
 }
 
+@app.get("/health")
+async def health(request: Request):
+    return {
+        "status": "OK",
+        "msg": "Hello, Sir! this backend it working a s expected!!",
+        "code": 200
+    }
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     projects = [

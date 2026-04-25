@@ -1,3 +1,4 @@
+.venv
 # ----------------------
 # 🐍 Python
 # ----------------------
@@ -63,29 +64,27 @@ ENV/
 *.swo
 
 # ----------------------
-# 📊 Streamlit specific
+# 🔥 Flask specific
 # ----------------------
-.streamlit/secrets.toml
-.streamlit/credentials.toml
+instance/
+.webassets-cache
 
-# Optional: cache folder (can get large)
-.streamlit/cache/
-
-# ----------------------
-# 📁 Data / ML artifacts (optional)
-# ----------------------
-*.csv
-*.tsv
-*.xlsx
-*.parquet
-*.h5
-*.pkl
-*.joblib
+# SQLite databases (common in Flask apps)
+*.db
+*.sqlite3
 
 # ----------------------
 # ⚡ uv (Astral uv)
 # ----------------------
 uv.lock
+
+# ----------------------
+# 📦 Node (if using frontend)
+# ----------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # ----------------------
 # 🗂️ OS files
