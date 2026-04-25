@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ name | default('Portfolio') }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{{ url_for('static', path='/image.png') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #020617;
+        --accent-blue: #3b82f6;
+        --accent-cyan: #22d3ee;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--bg-deep);
+        color: #f1f5f9;
+        overflow-x: hidden;
+      }
+
+      /* Bluish Glow Background */
+      .bg-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background:
+          radial-gradient(
+            circle at 10% 10%,
+            rgba(59, 130, 246, 0.1) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 90%,
+            rgba(34, 211, 238, 0.1) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(15, 23, 42, 1) 0%,
+            var(--bg-deep) 100%
+          );
+      }
+
+      .glass-panel {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(56, 189, 248, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .glass-panel:hover {
+        border-color: rgba(34, 211, 238, 0.4);
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.15);
+        transform: translateY(-4px);
+      }
+
+      .text-gradient {
+        background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .skill-tag {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+      }
+
+      .skill-tag:hover {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: var(--accent-blue);
+        color: white;
+      }
+
+      @keyframes pulse-slow {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+      .animate-pulse-slow {
+        animation: pulse-slow 4s infinite;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <div class="bg-glow"></div>
+
+    <div class="max-w-6xl mx-auto px-6 py-12 md:py-24">
+      <nav class="flex justify-between items-center mb-20">
+
+  <!-- Left side (Logo + Name together) -->
+  <div class="flex items-center gap-2">
+    <img class="w-8" src="../static/image.png">
+    
+    <div class="text-xl font-bold tracking-tighter">
+      dpk45deepak<span class="text-cyan-500">.</span>
+    </div>
+  </div>
+
+  <!-- Right side (GitHub button) -->
+  <a
+    href="{{ github }}"
+    target="_blank"
+    class="glass-panel px-5 py-2 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-white/5"
+  >
+    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+    </svg>
+    Github
+  </a>
+
+</nav>
+
+      <section class="mb-32">
+        <h1 class="text-6xl md:text-8xl font-bold tracking-tight mb-8">
+          Building <span class="text-gradient">Intelligence</span><br />
+          from Data.
+        </h1>
+        <p
+          class="text-xl md:text-2xl text-slate-400 max-w-3xl leading-relaxed mb-10"
+        >
+          Hi, I'm <span class="text-white font-semibold">{{ name }}</span>. A
+          Machine Learning Engineer focused on turning complex datasets into
+          actionable predictive models.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <span
+            class="flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-sm"
+          >
+            <span class="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></span>
+            Python / Scikit-Learn / PyTorch
+          </span>
+        </div>
+        <div class="mt-4 flex justify-center">
+            <a href="/predict"
+              class="group relative inline-flex items-center gap-3 px-8 py-4 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/30 rounded-2xl transition-all duration-300 overflow-hidden">
+
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                <span class="relative text-white font-bold tracking-wide">Enter Model Lab</span>
+
+                <svg class="relative w-5 h-5 text-cyan-400 group-hover:translate-x-1 transition-transform"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
+        </div>
+      </section>
+
+
+      <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-32">
+        <div class="md:col-span-2 glass-panel rounded-3xl p-8">
+          <h3
+            class="text-blue-400 font-bold uppercase tracking-widest text-xs mb-4"
+          >
+            Tech Stack
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {% for skill in ["NumPy", "Pandas", "Matplotlib", "Seaborn",
+            "TensorFlow", "FastAPI", "SQL", "Git"] %}
+            <span class="skill-tag px-4 py-2 rounded-xl text-sm"
+              >{{ skill }}</span
+            >
+            {% endfor %}
+          </div>
+        </div>
+        <div class="glass-panel rounded-3xl p-8">
+          <h3
+            class="text-blue-400 font-bold uppercase tracking-widest text-xs mb-4"
+          >
+            Focus
+          </h3>
+          <p class="text-lg font-semibold">Predictive Modeling</p>
+          <p class="text-slate-500 text-sm mt-2 leading-snug">
+            Optimizing algorithms for accuracy and scale.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="flex items-center justify-between mb-12">
+          <h2 class="text-3xl font-bold">Selected Projects</h2>
+          <div class="h-px bg-slate-800 flex-grow ml-8 hidden md:block"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {% if projects %} {% for project in projects %}
+          <div class="glass-panel p-8 rounded-[2rem] flex flex-col group">
+            <div
+              class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+
+            <h3
+              class="text-2xl font-bold mb-3 group-hover:text-cyan-400 transition-colors"
+            >
+              {{ project["title"] }}
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-8 text-sm flex-grow">
+              {{ project["desc"] }}
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+              {% for t in project["tech"].split(',') %}
+              <span
+                class="text-[10px] font-bold tracking-tighter uppercase px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg"
+              >
+                {{ t.strip() }}
+              </span>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %} {% endif %}
+        </div>
+      </section>
+
+      <footer
+        class="mt-40 pt-10 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm gap-4"
+      >
+        <p>&copy; 2026 {{ name }}</p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+          <a href="#" class="hover:text-white transition-colors">Resume</a>
+          <a href="#" class="hover:text-white transition-colors">Email</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
