@@ -1,191 +1,248 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>To-Do App</title>
+    <title>To-Do App | Master Your Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      // Enable dark mode toggle
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            },
+            animation: {
+              'fade-in-up': 'fadeInUp 0.4s ease-out forwards',
+              'blob': 'blob 7s infinite',
+            },
+            keyframes: {
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(15px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              }
+            }
+          }
+        }
+      }
+      
+      // Initial Theme Check
+      if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
         document.documentElement.classList.add("dark");
       } else {
         document.documentElement.classList.remove("dark");
       }
     </script>
+    <style>
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+      .dark ::-webkit-scrollbar-thumb { background: #475569; }
+      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+      
+      /* Hide scrollbar for task list but allow scroll */
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
   </head>
 
-  <body
-    class="bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-200 transition-colors duration-500"
-  >
-    <!-- Header -->
-    <header
-      class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-6 shadow-md"
-    >
-      <div
-        class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between px-6"
-      >
-        <h1 class="text-3xl font-bold tracking-wide">📝 My To-Do App</h1>
-        <nav class="mt-4 md:mt-0 flex items-center gap-4">
-          <a
-            href="#todo"
-            class="hover:text-yellow-300 transition font-medium"
-            >Tasks</a
-          >
-          <a
-            href="#about"
-            class="hover:text-yellow-300 transition font-medium"
-            >About</a
-          >
-          <a
-            href="#contact"
-            class="hover:text-yellow-300 transition font-medium"
-            >Contact</a
-          >
+  <body class="bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-200 transition-colors duration-500 font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+    
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 dark:opacity-40 animate-blob"></div>
+        <div class="absolute top-0 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 dark:opacity-40 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-32 left-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 dark:opacity-40 animate-blob animation-delay-4000"></div>
+    </div>
 
-          <!-- Dark Mode Toggle -->
-          <button
-            id="themeToggle"
-            class="ml-4 px-3 py-1 bg-black/30 dark:bg-white/20 rounded-full text-sm hover:scale-105 transition"
-          >
-            🌙
+    <header class="fixed w-full top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-950/70 border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-300">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-4">
+        <a href="#" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-indigo-500/30 transition-all duration-300 group-hover:scale-105">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <h1 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-indigo-500 transition-colors">TaskFlow.</h1>
+        </a>
+        <nav class="mt-4 md:mt-0 flex items-center gap-6">
+          <a href="#todo" class="text-sm font-semibold text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors">Tasks</a>
+          <a href="#about" class="text-sm font-semibold text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors">About</a>
+          <a href="#contact" class="text-sm font-semibold text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors">Contact</a>
+
+          <button id="themeToggle" class="relative p-2 ml-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:ring-2 hover:ring-indigo-500 transition-all duration-300 focus:outline-none overflow-hidden group">
+            <span class="block transition-transform duration-500 group-hover:scale-110" id="themeIcon">☀️</span>
           </button>
         </nav>
       </div>
     </header>
 
-    <!-- Hero Section -->
-    <section
-      class="bg-indigo-50 dark:bg-gray-900 py-20 text-center transition-colors"
-    >
-      <h2
-        class="text-4xl md:text-5xl font-extrabold text-indigo-700 dark:text-indigo-400 mb-6"
-      >
-        Stay Organized and Productive
+    <section class="pt-40 pb-20 text-center px-6">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-sm font-semibold mb-8 border border-indigo-100 dark:border-indigo-500/20 shadow-sm animate-fade-in-up" style="animation-delay: 0.1s;">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+        </span>
+        Your Personal Workspace
+      </div>
+      <h2 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up text-gray-900 dark:text-white" style="animation-delay: 0.2s;">
+        Master your <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">daily flow.</span>
       </h2>
-      <p
-        class="text-lg max-w-2xl mx-auto text-gray-700 dark:text-gray-300 leading-relaxed"
-      >
-        Add, track, and complete your daily tasks easily with our simple and
-        intuitive to-do app.
+      <p class="text-lg md:text-xl max-w-2xl mx-auto text-gray-500 dark:text-gray-400 leading-relaxed animate-fade-in-up" style="animation-delay: 0.3s;">
+        Clear your mind, capture tasks instantly, and conquer your day with an interface designed to keep you in the zone.
       </p>
-      <div class="mt-8">
-        <a
-          href="#todo"
-          class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg transition duration-300"
-        >
-          Start Managing Tasks
+      <div class="mt-10 animate-fade-in-up" style="animation-delay: 0.4s;">
+        <a href="#todo" class="px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 inline-flex items-center gap-2">
+          Get Started
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </a>
       </div>
     </section>
 
-    <!-- To-Do Section -->
-    <section id="todo" class="py-20 max-w-2xl mx-auto px-6">
-      <h2
-        class="text-3xl font-bold text-center text-indigo-700 dark:text-indigo-400 mb-12"
-      >
-        Your Tasks
-      </h2>
+    <section id="todo" class="py-20 max-w-3xl mx-auto px-6 scroll-mt-20">
+      <div class="relative bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl p-6 md:p-10 rounded-[2rem] shadow-2xl border border-white/50 dark:border-gray-700/50">
+        
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Active Tasks</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" id="taskCountText">Let's get things done</p>
+            </div>
+            <div class="text-indigo-500 dark:text-indigo-400 font-medium">
+                Today
+            </div>
+        </div>
 
-      <div
-        class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700"
-      >
-        <!-- Add Task Form -->
-        <form id="taskForm" class="flex gap-4 mb-6">
+        <form id="taskForm" class="relative flex items-center mb-8 group">
+          <div class="absolute left-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          </div>
           <input
             type="text"
             id="taskInput"
-            placeholder="Add a new task..."
-            class="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-900 dark:text-gray-200"
+            placeholder="What needs to be done?"
+            class="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-2xl pl-12 pr-32 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
+            autocomplete="off"
           />
           <button
             type="submit"
-            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+            class="absolute right-2 top-2 bottom-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 active:scale-95"
           >
             Add
           </button>
         </form>
 
-        <!-- Task List -->
-        <ul id="taskList" class="space-y-3"></ul>
+        <div class="max-h-[500px] overflow-y-auto no-scrollbar pr-2">
+            <ul id="taskList" class="space-y-3">
+                </ul>
+            
+            <div id="emptyState" class="hidden flex-col items-center justify-center py-12 text-center opacity-0 transition-opacity duration-500">
+                <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">No tasks yet</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Add a task above to start organizing your day.</p>
+            </div>
+        </div>
       </div>
     </section>
 
-    <!-- About Section -->
-    <section
-      id="about"
-      class="bg-gray-100 dark:bg-gray-900 py-20 text-center px-6 transition-colors"
-    >
-      <h2
-        class="text-3xl font-bold text-indigo-700 dark:text-indigo-400 mb-6"
-      >
-        About This App
-      </h2>
-      <p
-        class="max-w-3xl mx-auto text-gray-700 dark:text-gray-300 leading-relaxed"
-      >
-        This simple To-Do app helps you manage your daily tasks efficiently.
-        Mark tasks as completed, add new tasks, and stay productive throughout
-        the day.
-      </p>
+    <section id="about" class="py-20 text-center px-6 max-w-4xl mx-auto scroll-mt-20">
+      <div class="bg-indigo-50/50 dark:bg-indigo-900/10 rounded-[3rem] p-12 md:p-20 border border-indigo-100 dark:border-indigo-500/10">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Designed for Focus</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+            TaskFlow is built on the philosophy of minimalism. We stripped away the clutter, leaving you with a clean, distraction-free environment to mark tasks as completed, add new ones, and stay profoundly productive.
+          </p>
+      </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 max-w-3xl mx-auto px-6 text-center">
-      <h2
-        class="text-3xl font-bold text-indigo-700 dark:text-indigo-400 mb-6"
-      >
-        Contact Us
-      </h2>
-      <p class="text-gray-700 dark:text-gray-300 mb-6">
-        Have questions? Reach out to us anytime.
+    <section id="contact" class="py-20 max-w-3xl mx-auto px-6 text-center scroll-mt-20">
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Let's Connect</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+        Have feedback or need assistance? Our inbox is always open to help you achieve more.
       </p>
-      <a
-        href="mailto:info@todoapp.com"
-        class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md transition duration-300"
-      >
-        Send Email
+      <a href="mailto:info@todoapp.com" class="inline-flex items-center gap-2 px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        Drop us a line
       </a>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-6 text-center">
-      <p>© 2025 My To-Do App | Organize Your Life</p>
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-8 text-center mt-12">
+      <p class="text-sm font-medium text-gray-500">© 2025 TaskFlow | Organize Your Life Beautifully</p>
     </footer>
 
-    <!-- JavaScript -->
     <script>
       const taskForm = document.getElementById("taskForm");
       const taskInput = document.getElementById("taskInput");
       const taskList = document.getElementById("taskList");
       const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const emptyState = document.getElementById("emptyState");
+      const taskCountText = document.getElementById("taskCountText");
 
-      // Function to render tasks
+      // Update empty state visibility
+      function updateUIState(count) {
+          if (count === 0) {
+              emptyState.classList.remove("hidden");
+              setTimeout(() => emptyState.classList.remove("opacity-0"), 50);
+              taskCountText.textContent = "Your list is clear!";
+          } else {
+              emptyState.classList.add("opacity-0");
+              setTimeout(() => emptyState.classList.add("hidden"), 300);
+              taskCountText.textContent = `${count} task${count > 1 ? 's' : ''} remaining`;
+          }
+      }
+
+      // Function to render tasks beautifully
       function renderTasks(tasks) {
         taskList.innerHTML = "";
-        tasks.forEach(task => {
+        updateUIState(tasks.length);
+        
+        tasks.forEach((task, index) => {
           const li = document.createElement("li");
-          li.className = "flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-3 rounded-lg shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition";
+          // Staggered animation classes
+          li.className = "group flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-300 hover:border-indigo-200 dark:hover:border-indigo-800 animate-fade-in-up";
+          li.style.animationDelay = `${index * 0.05}s`;
+          
           li.innerHTML = `
-            <span>${task.name}</span>
-            <button data-id="${task.id}" class="text-red-500 hover:text-red-700 font-bold">✕</button>
+            <div class="flex items-center gap-4 overflow-hidden">
+                <button class="flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 group-hover:border-indigo-500 transition-colors flex items-center justify-center">
+                   </button>
+                <span class="text-gray-800 dark:text-gray-200 font-medium truncate">${task.name}</span>
+            </div>
+            <button data-id="${task.id}" class="delete-btn opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300">
+                <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
           `;
           taskList.appendChild(li);
         });
       }
 
+      // Fallback data for previewing without a backend
+      let fallbackTasks = [
+          { id: 1, name: "Review quarterly design systems" },
+          { id: 2, name: "Deploy updated landing page" },
+          { id: 3, name: "Coffee with the engineering team" }
+      ];
+
       // Fetch tasks on page load
       async function fetchTasks() {
         try {
           const response = await fetch("/task");
+          if(!response.ok) throw new Error("Backend not connected");
           const tasks = await response.json();
           renderTasks(tasks);
         } catch (error) {
-          console.error("Error fetching tasks:", error);
+          console.warn("Using fallback data since API is unavailable locally.");
+          renderTasks(fallbackTasks);
         }
       }
 
@@ -201,48 +258,67 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: taskText, description: "" }),
           });
-          const newTask = await response.json();
+          if(!response.ok) throw new Error();
+          
+          await response.json();
           fetchTasks(); // Re-fetch to update list
-          taskInput.value = "";
         } catch (error) {
-          console.error("Error adding task:", error);
+          // Fallback logic
+          fallbackTasks.unshift({ id: Date.now(), name: taskText });
+          renderTasks(fallbackTasks);
         }
+        taskInput.value = "";
       });
       
       // Delete task
       taskList.addEventListener("click", async function(e) {
-        if (e.target.tagName === "BUTTON") {
-          const taskId = e.target.dataset.id;
-          try {
-            await fetch(`/task/${taskId}`, { method: "DELETE" });
-            fetchTasks(); // Re-fetch to update list
-          } catch (error) {
-            console.error("Error deleting task:", error);
-          }
+        const btn = e.target.closest('.delete-btn');
+        if (btn) {
+          const taskId = btn.dataset.id;
+          const li = btn.closest('li');
+          
+          // Animate out
+          li.style.transform = "scale(0.95)";
+          li.style.opacity = "0";
+          
+          setTimeout(async () => {
+              try {
+                const response = await fetch(`/task/${taskId}`, { method: "DELETE" });
+                if(!response.ok) throw new Error();
+                fetchTasks(); // Re-fetch to update list
+              } catch (error) {
+                // Fallback logic
+                fallbackTasks = fallbackTasks.filter(t => t.id != taskId);
+                renderTasks(fallbackTasks);
+              }
+          }, 200); // match animation duration
         }
       });
 
       // Dark mode toggle
+      function updateThemeIcon() {
+        if (document.documentElement.classList.contains("dark")) {
+          themeIcon.textContent = "☀️";
+        } else {
+          themeIcon.textContent = "🌙";
+        }
+      }
+
       themeToggle.addEventListener("click", () => {
         document.documentElement.classList.toggle("dark");
         if (document.documentElement.classList.contains("dark")) {
           localStorage.theme = "dark";
-          themeToggle.textContent = "☀️";
         } else {
           localStorage.theme = "light";
-          themeToggle.textContent = "🌙";
         }
+        updateThemeIcon();
       });
 
       // Set correct toggle icon on load
-      if (document.documentElement.classList.contains("dark")) {
-        themeToggle.textContent = "☀️";
-      } else {
-        themeToggle.textContent = "🌙";
-      }
+      updateThemeIcon();
       
       // Initial fetch
       fetchTasks();
     </script>
   </body>
-</html>
+</html>`
