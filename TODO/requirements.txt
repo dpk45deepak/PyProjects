@@ -1,7 +1,5 @@
-# Dev environment
-pip
-autopep8
-
-# App
-Flask==3.0.2
-gunicorn==21.2.0
+Flask==3.0.0
+gunicorn==25.3.0
+pandas
+numpy
+scikit-lear
