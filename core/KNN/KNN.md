@@ -176,3 +176,109 @@ y_pred = knn.predict(X_test)
 accuracy = knn.score(X_test, y_test)
 print("Accuracy:", accuracy)
 ```
+
+## 🔍 Variants of K-Nearest Neighbors (KNN)
+
+KNN is simple but can become **slow** when the dataset grows large because it calculates distance with *every point*.  
+To solve this, optimized data structures like **KD-Tree** and **Ball Tree** are used.
+
+---
+
+## 🌳 1. KD-Tree (K-Dimensional Tree)
+
+### 📌 Definition
+A **KD-Tree** is a space-partitioning data structure used to organize points in a k-dimensional space.  
+It helps in reducing the number of distance calculations.
+
+### ⚙️ How it Works
+- The dataset is recursively split into two halves.
+- Each split is based on one feature (dimension).
+- It forms a **binary tree** structure.
+- At each level, a different dimension is used for splitting.
+
+### 🧠 Intuition
+Instead of checking all points:
+👉 KD-Tree eliminates large portions of data that are far away.
+
+### ✅ Advantages
+- Faster than brute-force KNN for **low-dimensional data**
+- Efficient search using tree traversal
+- Reduces time complexity significantly
+
+### ❌ Disadvantages
+- Performance drops in **high-dimensional data** (curse of dimensionality)
+- Tree balancing can be costly
+
+### ⏱️ Complexity
+- Build Time: `O(n log n)`
+- Query Time: `O(log n)` (average)
+
+---
+
+## ⚽ 2. Ball Tree
+
+### 📌 Definition
+A **Ball Tree** partitions data into nested hyperspheres (balls) instead of splitting by axis like KD-Tree.
+
+### ⚙️ How it Works
+- Data is divided into clusters (balls)
+- Each node contains a **center point and radius**
+- Points inside a ball are grouped together
+- Search eliminates entire balls if they are far from the query point
+
+### 🧠 Intuition
+Instead of splitting space into boxes (like KD-Tree):
+👉 Ball Tree groups nearby points into circular regions
+
+### ✅ Advantages
+- Works better for **high-dimensional data**
+- More flexible than KD-Tree
+- Efficient for complex datasets
+
+### ❌ Disadvantages
+- Slightly more complex to implement
+- Slower than KD-Tree in low dimensions
+
+### ⏱️ Complexity
+- Build Time: `O(n log n)`
+- Query Time: `O(log n)` (average)
+
+---
+
+## ⚔️ KD-Tree vs Ball Tree
+
+| Feature     | KD-Tree 🌳           | Ball Tree ⚽          |
+| ----------- | ------------------- | -------------------- |
+| Structure   | Axis-aligned splits | Hypersphere clusters |
+| Best for    | Low dimensions      | High dimensions      |
+| Speed       | Faster (low dim)    | Faster (high dim)    |
+| Flexibility | Less flexible       | More flexible        |
+| Complexity  | Simpler             | Slightly complex     |
+
+---
+
+## 🧠 When to Use What?
+
+- Use **KD-Tree** 👉 when features are **less (≤ 10-15 dimensions)**
+- Use **Ball Tree** 👉 when data is **high-dimensional or complex**
+- Use **Brute Force** 👉 when dataset is **small**
+
+---
+
+## 💻 Implementation in Scikit-Learn
+
+```python
+from sklearn.neighbors import KNeighborsClassifier
+
+# Using KD-Tree
+knn_kd = KNeighborsClassifier(algorithm='kd_tree')
+knn_kd.fit(X_train, y_train)
+
+# Using Ball Tree
+knn_ball = KNeighborsClassifier(algorithm='ball_tree')
+knn_ball.fit(X_train, y_train)
+
+# Auto (chooses best)
+knn_auto = KNeighborsClassifier(algorithm='auto')
+knn_auto.fit(X_train, y_train)
+```
