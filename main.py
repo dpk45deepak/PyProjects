@@ -42,6 +42,11 @@ try:
 except FileNotFoundError:
     knn_model = None
 
+# Decision Tree Model
+try:
+    dt_model = joblib.load('../../models/DecisionTree/decision_tree_model.joblib')
+except FileNotFoundError:
+    dt_model = None
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -66,7 +71,7 @@ async def lab_redirect():
 @app.get("/lab/{model_id}", response_class=HTMLResponse)
 async def model_lab(request: Request, model_id: str):
     """Renders the lab page dynamically based on the selected model."""
-    if model_id not in ["lr", "nb", "knn"]:
+    if model_id not in ["lr", "nb", "knn", "dt"]:
         return RedirectResponse(url="/lab/lr")
 
     return templates.TemplateResponse(
@@ -126,9 +131,9 @@ async def predict_nb(
 
 @app.post("/predict/knn", response_class=HTMLResponse)
 async def predict_knn(
-    request: Request, 
-    feature1: float = Form(...), 
-    feature2: float = Form(...), 
+    request: Request,
+    feature1: float = Form(...),
+    feature2: float = Form(...),
     feature3: float = Form(...)
 ):
     if knn_model:
@@ -141,6 +146,26 @@ async def predict_knn(
         request=request,
         name="model_lab.html", 
         context={"request": request, **USER_DATA, "active_model": "knn", "prediction": str(pred_val), "prev_inputs": {"feature1": feature1, "feature2": feature2, "feature3": feature3}}
+    )
+
+@app.post("/predict/dt", response_class=HTMLResponse)
+async def predict_dt(
+    request: Request,
+    feature1: float = Form(...),
+    feature2: float = Form(...),
+    feature3: float = Form(...),
+    feature4: float = Form(...)
+):
+    if dt_model:
+        input_values = np.array([[feature1, feature2, feature3, feature4]])
+        pred_val = dt_model.predict(input_values)[0]
+    else:
+        pred_val = "Setosa" if feature1 < 5 else "Versicolor" # Fallback mock
+
+    return templates.TemplateResponse(
+        request=request,
+        name="model_lab.html",
+        context={"request": request, **USER_DATA, "active_model": "dt", "prediction": str(pred_val), "prev_inputs": {"feature1": feature1, "feature2": feature2, "feature3": feature3, "feature4": feature4}}
     )
 
 if __name__ == "__main__":

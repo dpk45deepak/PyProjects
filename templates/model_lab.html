@@ -7,11 +7,11 @@
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='/image.png') }}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         :root { --bg-deep: #020617; --accent-cyan: #22d3ee; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-deep); color: #f1f5f9; }
-        
+
         .glass-panel {
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(16px);
@@ -31,7 +31,7 @@
             outline: none;
             box-shadow: 0 0 15px rgba(34, 211, 238, 0.1);
         }
-        
+
         .select-field option { background: var(--bg-deep); color: white; }
 
         .btn-predict {
@@ -43,7 +43,7 @@
             transform: scale(1.02);
             box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
         }
-        
+
         .nav-link-active {
             border-color: rgba(34, 211, 238, 0.5);
             color: var(--accent-cyan);
@@ -66,21 +66,20 @@
         </a>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <!-- Dynamic Sidebar -->
+
             <aside class="lg:col-span-3 space-y-4">
                 <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-6 px-4">Available Models</h2>
                 <nav class="space-y-2">
                     <a href="/lab/lr" class="block w-full text-left px-4 py-3 rounded-xl glass-panel transition-all {{ 'nav-link-active' if active_model == 'lr' else 'nav-link-inactive' }}">Height Predictor (LR)</a>
                     <a href="/lab/nb" class="block w-full text-left px-4 py-3 rounded-xl glass-panel transition-all {{ 'nav-link-active' if active_model == 'nb' else 'nav-link-inactive' }}">Meal Prediction (NB)</a>
                     <a href="/lab/knn" class="block w-full text-left px-4 py-3 rounded-xl glass-panel transition-all {{ 'nav-link-active' if active_model == 'knn' else 'nav-link-inactive' }}">Feature Classifier (KNN)</a>
+                    <a href="/lab/dt" class="block w-full text-left px-4 py-3 rounded-xl glass-panel transition-all {{ 'nav-link-active' if active_model == 'dt' else 'nav-link-inactive' }}">Iris Classifier (DT)</a>
                 </nav>
             </aside>
 
             <main class="lg:col-span-9">
                 <div class="glass-panel rounded-[2.5rem] p-8 md:p-12">
-                    
-                    <!-- LINEAR REGRESSION FORM -->
+
                     {% if active_model == 'lr' %}
                     <div class="mb-10">
                         <div class="flex items-center gap-4 mb-4">
@@ -97,7 +96,6 @@
                         <button type="submit" class="w-full py-4 rounded-2xl btn-predict text-white font-bold text-lg shadow-lg mt-4">Predict Height</button>
                     </form>
 
-                    <!-- NAIVE BAYES FORM -->
                     {% elif active_model == 'nb' %}
                     <div class="mb-10">
                         <div class="flex items-center gap-4 mb-4">
@@ -145,7 +143,6 @@
                         <button type="submit" class="w-full py-4 rounded-2xl btn-predict text-white font-bold text-lg shadow-lg mt-4 md:col-span-2">Run Classification</button>
                     </form>
 
-                    <!-- KNN FORM -->
                     {% elif active_model == 'knn' %}
                     <div class="mb-10">
                         <div class="flex items-center gap-4 mb-4">
@@ -169,9 +166,28 @@
                         </div>
                         <button type="submit" class="w-full py-4 rounded-2xl btn-predict text-white font-bold text-lg shadow-lg mt-4 md:col-span-3">Calculate Distances & Predict</button>
                     </form>
+
+                    {% elif active_model == 'dt' %}
+                    <div class="mb-10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-widest rounded-lg border border-emerald-500/20">Tree Classification</span>
+                        </div>
+                        <h1 class="text-4xl font-bold text-white mb-4">Iris Species Predictor</h1>
+                        <p class="text-slate-400 leading-relaxed max-w-2xl">Input the petal dimensions below to classify the Iris flower species (Setosa, Versicolor, or Virginica) using a Decision Tree model.</p>
+                    </div>
+                    <form action="/predict/dt" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-slate-300">Petal Width (cm)</label>
+                            <input type="number" step="0.01" name="petal_width" placeholder="e.g. 1.2" value="{{ prev_inputs.petal_width if prev_inputs else '' }}" required class="w-full px-4 py-3 rounded-xl input-field">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-slate-300">Petal Length (cm)</label>
+                            <input type="number" step="0.01" name="petal_length" placeholder="e.g. 4.5" value="{{ prev_inputs.petal_length if prev_inputs else '' }}" required class="w-full px-4 py-3 rounded-xl input-field">
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-2xl btn-predict text-white font-bold text-lg shadow-lg mt-4 md:col-span-2">Predict Species</button>
+                    </form>
                     {% endif %}
 
-                    <!-- OUTPUT DISPLAY -->
                     {% if prediction %}
                     <div class="mt-12 p-8 rounded-3xl bg-cyan-500/5 border border-cyan-500/20 animate-in fade-in slide-in-from-bottom-4 duration-700">
                         <h3 class="text-cyan-400 text-xs font-bold uppercase tracking-widest mb-2">Model Output</h3>
